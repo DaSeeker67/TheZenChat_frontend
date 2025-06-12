@@ -19,7 +19,6 @@ export default function JoinRoom({ onJoin }: JoinRoomProps) {
                 // Simulate API call
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 
-                // Simulate random error for demo
                 if (Math.random() > 0.8) {
                     throw new Error('Room not found');
                 }
