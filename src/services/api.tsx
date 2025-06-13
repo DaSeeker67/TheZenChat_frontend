@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-    baseURL:'http://localhost:4443'
+    baseURL:'https://the-zenchat-backend.onrender.com'
 })
 
 API.interceptors.request.use((req)=>{
