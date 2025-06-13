@@ -246,31 +246,33 @@ export default function ChatRoom({ roomId, onLeave }: Props) {
         ))}
       </div>
 
-      <style jsx>{`
-        @keyframes float {
-          0%, 100% { 
-            transform: translateY(0px) rotate(0deg); 
-            opacity: 0.3;
+      <style>
+        {`
+          @keyframes float {
+            0%, 100% { 
+              transform: translateY(0px) rotate(0deg); 
+              opacity: 0.3;
+            }
+            50% { 
+              transform: translateY(-20px) rotate(180deg); 
+              opacity: 0.6;
+            }
           }
-          50% { 
-            transform: translateY(-20px) rotate(180deg); 
-            opacity: 0.6;
+          @keyframes fadeInUp {
+            from {
+              opacity: 0;
+              transform: translateY(10px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
           }
-        }
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(10px);
+          .animate-fadeIn {
+            animation: fadeInUp 0.3s ease-out forwards;
           }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .animate-fadeIn {
-          animation: fadeInUp 0.3s ease-out forwards;
-        }
-      `}</style>
+        `}
+      </style>
     </div>
   );
 }
