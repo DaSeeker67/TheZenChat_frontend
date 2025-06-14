@@ -1,6 +1,6 @@
-#🧘 Zen Chat Frontend
+# 🧘 Zen Chat Frontend
 
-#images
+# images
 
 ![Screenshot 2025-06-07 014004](https://github.com/user-attachments/assets/3bf092ae-69be-430d-af56-593b62101c8e)
 ![Screenshot 2025-06-07 014112](https://github.com/user-attachments/assets/d7d6212a-bc62-4b21-b1d6-fd36eb22d2b8)
