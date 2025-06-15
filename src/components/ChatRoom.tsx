@@ -2,13 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import { Send, Users, LogOut, Smile, MoreHorizontal } from "lucide-react";
 import { getSocket } from "../services/socket";
 import { useAuth } from "../context/AuthContext";
+import { useNavigate, useParams } from "react-router-dom";
 
-interface Props {
-  roomId: string;
-  onLeave: () => void;
-}
-
-export default function ChatRoom({ roomId, onLeave }: Props) {
+export default function ChatRoom() {
+  const { roomId } = useParams();
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<string[]>([]);
@@ -16,7 +14,6 @@ export default function ChatRoom({ roomId, onLeave }: Props) {
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-  // Original WebSocket logic - PRESERVED
   useEffect(() => {
     const socket = getSocket();
 
@@ -50,14 +47,13 @@ export default function ChatRoom({ roomId, onLeave }: Props) {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Original send logic - PRESERVED
   const handleSend = () => {
     const socket = getSocket();
     if (message.trim()) {
       socket?.send(
         JSON.stringify({
           type: "message",
-          payload: { roomid: roomId, message: `${user?.username}: ${message}` },
+          payload: { roomid: roomId, message: `${user}: ${message}` },
         })
       );
       setMessage("");
@@ -85,6 +81,10 @@ export default function ChatRoom({ roomId, onLeave }: Props) {
       return { username, message: messageParts.join(': ') };
     }
     return { username: 'System', message: msg };
+  };
+
+  const handleLeave = () => {
+    navigate('/rooms');
   };
 
   return (
@@ -122,7 +122,7 @@ export default function ChatRoom({ roomId, onLeave }: Props) {
               </div>
             </div>
             <button
-              onClick={onLeave}
+              onClick={handleLeave}
               className="flex items-center space-x-2 px-4 py-2 text-purple-600 hover:text-white hover:bg-gradient-to-r hover:from-pink-500 hover:to-purple-500 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg"
             >
               <LogOut size={16} />
@@ -136,7 +136,7 @@ export default function ChatRoom({ roomId, onLeave }: Props) {
           <div className="h-full overflow-y-auto px-6 py-4 space-y-4">
             {messages.map((msg, i) => {
               const { username, message: messageText } = parseMessage(msg);
-              const isOwnMessage = username === user?.username;
+              const isOwnMessage = username === user;
               
               return (
                 <div

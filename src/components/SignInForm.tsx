@@ -2,17 +2,14 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import API from "../services/api";
 import { useAuth } from "../context/AuthContext";
-
-interface SignInFormProps {
-    onNext: () => void;
-}
+import { useNavigate } from "react-router-dom";
 
 interface SignInResponse {
     token: string;
     message?: string;
 }
 
-export default function SignInForm({ onNext }: SignInFormProps) {
+export default function SignInForm() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
@@ -20,20 +17,38 @@ export default function SignInForm({ onNext }: SignInFormProps) {
     const [isLoading, setIsLoading] = useState(false);
     const [focusedField, setFocusedField] = useState<string | null>(null);
     const { signIn } = useAuth();
+    const navigate = useNavigate();
 
     const handleSignIn = async (e?: FormEvent) => {
         if (e) e.preventDefault();
         setIsLoading(true);
         setError('');
+        if (!email.includes("@") || !email.includes(".")) {
+            setError("Please enter a valid email.");
+            setIsLoading(false);
+            return;
+        }
+
+        if(password.length < 8) {
+            setError("Password must be at least 8 characters long.");
+            setIsLoading(false);
+            return;
+        }
+
+        if(username.length < 3) {
+            setError("Username must be at least 3 characters long.");
+            setIsLoading(false);
+            return;
+        }
         
         try {
-            const response = await API.post<SignInResponse>('api/auth/register', { 
+            const response = await API.post<SignInResponse>('api/auth/login', { 
                 username, 
                 password, 
                 email 
             });
             signIn(username, response.data.token);
-            onNext();
+            navigate('/rooms');
         } catch (err: any) {
             setError(err.response?.data?.message || 'Sign in failed');
         } finally {
@@ -83,7 +98,7 @@ export default function SignInForm({ onNext }: SignInFormProps) {
                             <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 via-cyan-400 to-pink-400 bg-clip-text text-transparent mb-2 animate-pulse">
                                 Welcome Back
                             </h1>
-                            <p className="text-white/60 text-sm">Sign in to continue your journey</p>
+                            <p className="text-white/60 text-sm">Login to continue your journey</p>
                         </div>
 
                         {/* Error message with slide animation */}
@@ -181,8 +196,11 @@ export default function SignInForm({ onNext }: SignInFormProps) {
                         {/* Footer */}
                         <div className="mt-8 text-center">
                             <p className="text-white/40 text-sm">
-                                Don't have an account? 
-                                <span className="text-purple-400 hover:text-purple-300 cursor-pointer ml-1 transition-colors duration-200">
+                                Don't have an account?{' '}
+                                <span 
+                                    className="text-purple-400 hover:text-purple-300 cursor-pointer ml-1 transition-colors duration-200"
+                                    onClick={() => navigate('/signup')}
+                                >
                                     Sign up
                                 </span>
                             </p>

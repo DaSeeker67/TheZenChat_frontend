@@ -12,11 +12,13 @@
   "dependencies": {
     "@tailwindcss/postcss": "^4.1.8",
     "@types/axios": "^0.9.36",
+    "@types/react-router-dom": "^5.3.3",
     "axios": "^1.9.0",
     "lucide-react": "^0.513.0",
     "postcss": "^8.5.4",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-router-dom": "^7.6.2",
     "tailwindcss": "^4.1.8"
   },
   "devDependencies": {

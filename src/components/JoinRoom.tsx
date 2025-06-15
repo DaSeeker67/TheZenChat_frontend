@@ -1,14 +1,13 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { connectSocket } from "../services/socket";
 
-interface JoinRoomProps {
-    onJoin: (roomId: string) => void;
-}
-
-export default function JoinRoom({ onJoin }: JoinRoomProps) {
+export default function JoinRoom() {
     const [roomId, setRoomId] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [focusedField, setFocusedField] = useState<string | null>(null);
     const [error, setError] = useState('');
+    const navigate = useNavigate();
 
     const handleJoin = async () => {
         if (roomId.trim()) {
@@ -16,14 +15,14 @@ export default function JoinRoom({ onJoin }: JoinRoomProps) {
             setError('');
             
             try {
-                // Simulate API call
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                
-                if (Math.random() > 0.8) {
-                    throw new Error('Room not found');
+                // Connect to WebSocket
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    throw new Error('No authentication token found');
                 }
-                
-                onJoin(roomId);
+
+                await connectSocket(token);
+                navigate(`/chat/${roomId}`);
             } catch (err: any) {
                 setError(err.message || 'Failed to join room');
             } finally {
