@@ -120,6 +120,7 @@ export default function Signup() {
                                 className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white placeholder-white/40 focus:outline-none focus:border-purple-400/60 focus:bg-white/10 transition-all duration-300"
                                 required
                             />
+                            <div className={`absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-500/20 via-cyan-500/20 to-pink-500/20 transition-opacity duration-300 pointer-events-none ${focusedField === 'username' ? 'opacity-100' : 'opacity-0'}`}></div>
                             {formData.username && (
                                 <div className="absolute -top-2 left-4 px-2 bg-slate-900 text-xs text-purple-400 font-medium">
                                     Username
@@ -138,6 +139,7 @@ export default function Signup() {
                                 className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white placeholder-white/40 focus:outline-none focus:border-cyan-400/60 focus:bg-white/10 transition-all duration-300"
                                 required
                             />
+                            <div className={`absolute inset-0 rounded-2xl bg-gradient-to-r from-cyan-500/20 via-purple-500/20 to-pink-500/20 transition-opacity duration-300 pointer-events-none ${focusedField === 'email' ? 'opacity-100' : 'opacity-0'}`}></div>
                             {formData.email && (
                                 <div className="absolute -top-2 left-4 px-2 bg-slate-900 text-xs text-cyan-400 font-medium">
                                     Email
@@ -156,6 +158,7 @@ export default function Signup() {
                                 className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white placeholder-white/40 focus:outline-none focus:border-pink-400/60 focus:bg-white/10 transition-all duration-300"
                                 required
                             />
+                            <div className={`absolute inset-0 rounded-2xl bg-gradient-to-r from-pink-500/20 via-purple-500/20 to-cyan-500/20 transition-opacity duration-300 pointer-events-none ${focusedField === 'password' ? 'opacity-100' : 'opacity-0'}`}></div>
                             {formData.password && (
                                 <div className="absolute -top-2 left-4 px-2 bg-slate-900 text-xs text-pink-400 font-medium">
                                     Password
@@ -174,6 +177,7 @@ export default function Signup() {
                                 className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white placeholder-white/40 focus:outline-none focus:border-pink-400/60 focus:bg-white/10 transition-all duration-300"
                                 required
                             />
+                            <div className={`absolute inset-0 rounded-2xl bg-gradient-to-r from-pink-500/20 via-purple-500/20 to-cyan-500/20 transition-opacity duration-300 pointer-events-none ${focusedField === 'confirmPassword' ? 'opacity-100' : 'opacity-0'}`}></div>
                             {formData.confirmPassword && (
                                 <div className="absolute -top-2 left-4 px-2 bg-slate-900 text-xs text-pink-400 font-medium">
                                     Confirm Password
