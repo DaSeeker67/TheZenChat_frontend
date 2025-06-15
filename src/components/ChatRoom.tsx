@@ -3,6 +3,7 @@ import { Send, Users, LogOut, Smile, MoreHorizontal } from "lucide-react";
 import { getSocket } from "../services/socket";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, useParams } from "react-router-dom";
+import EmojiPicker, { EmojiClickData, Theme } from 'emoji-picker-react';
 
 export default function ChatRoom() {
   const { roomId } = useParams();
@@ -12,7 +13,9 @@ export default function ChatRoom() {
   const [messages, setMessages] = useState<Array<{text: string, timestamp: string}>>([]);
   const [onlineCount] = useState(Math.floor(Math.random() * 50) + 10);
   const [isTyping, setIsTyping] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const emojiPickerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const socket = getSocket();
@@ -87,6 +90,25 @@ export default function ChatRoom() {
 
   const handleLeave = () => {
     navigate('/rooms');
+  };
+
+  // Close emoji picker when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target as Node)) {
+        setShowEmojiPicker(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const onEmojiClick = (emojiData: EmojiClickData) => {
+    setMessage(prev => prev + emojiData.emoji);
+    setShowEmojiPicker(false);
   };
 
   return (
@@ -210,9 +232,31 @@ export default function ChatRoom() {
                 style={{ minHeight: '48px', maxHeight: '120px' }}
               />
               <div className="absolute right-3 top-3 flex items-center space-x-1">
-                <button className="p-1.5 hover:bg-purple-100 rounded-lg transition-all duration-200 hover:scale-110">
-                  <Smile size={16} className="text-purple-500" />
-                </button>
+                <div className="relative" ref={emojiPickerRef}>
+                  <button 
+                    className="p-1.5 hover:bg-purple-100 rounded-lg transition-all duration-200 hover:scale-110"
+                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                  >
+                    <Smile size={16} className="text-purple-500" />
+                  </button>
+                  {showEmojiPicker && (
+                    <div className="absolute bottom-full right-0 mb-2 z-50 transform scale-90 sm:scale-100 origin-bottom-right">
+                      <div className="w-[280px] sm:w-[300px] md:w-[350px]">
+                        <EmojiPicker
+                          onEmojiClick={onEmojiClick}
+                          width="100%"
+                          height={400}
+                          theme={Theme.LIGHT}
+                          style={{
+                            width: '100%',
+                            maxWidth: '350px',
+                            minWidth: '280px'
+                          }}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
                 <button className="p-1.5 hover:bg-purple-100 rounded-lg transition-all duration-200 hover:scale-110">
                   <MoreHorizontal size={16} className="text-purple-500" />
                 </button>
