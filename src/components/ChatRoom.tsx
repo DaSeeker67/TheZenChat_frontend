@@ -58,7 +58,11 @@ export default function ChatRoom() {
       socket?.send(
         JSON.stringify({
           type: "message",
-          payload: { roomid: roomId, message: `${user}: ${message}` },
+          payload: { 
+            roomid: roomId, 
+            message: `${user}: ${message}`,
+            timestamp: timestamp 
+          },
         })
       );
       setMessage("");
