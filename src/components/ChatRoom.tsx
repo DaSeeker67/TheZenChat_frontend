@@ -9,7 +9,7 @@ export default function ChatRoom() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState<string[]>([]);
+  const [messages, setMessages] = useState<Array<{text: string, timestamp: string}>>([]);
   const [onlineCount] = useState(Math.floor(Math.random() * 50) + 10);
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
@@ -18,7 +18,8 @@ export default function ChatRoom() {
     const socket = getSocket();
 
     const handleMessage = (event: MessageEvent) => {
-      setMessages((prev) => [...prev, event.data]);
+      const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      setMessages((prev) => [...prev, { text: event.data, timestamp }]);
     };
 
     socket?.addEventListener("message", handleMessage);
@@ -50,6 +51,7 @@ export default function ChatRoom() {
   const handleSend = () => {
     const socket = getSocket();
     if (message.trim()) {
+      const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       socket?.send(
         JSON.stringify({
           type: "message",
@@ -135,7 +137,7 @@ export default function ChatRoom() {
         <div className="flex-1 bg-white/70 backdrop-blur-xl border-x border-purple-200/50 overflow-hidden shadow-inner">
           <div className="h-full overflow-y-auto px-6 py-4 space-y-4">
             {messages.map((msg, i) => {
-              const { username, message: messageText } = parseMessage(msg);
+              const { username, message: messageText } = parseMessage(msg.text);
               const isOwnMessage = username === user;
               
               return (
@@ -163,7 +165,7 @@ export default function ChatRoom() {
                         {username}
                       </span>
                       <span className="text-xs text-purple-400">
-                        {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        {msg.timestamp}
                       </span>
                     </div>
                     <div className={`inline-block px-4 py-2 rounded-2xl transition-all duration-200 hover:scale-105 ${
